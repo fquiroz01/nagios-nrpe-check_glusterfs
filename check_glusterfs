@@ -90,9 +90,9 @@ for entries in $(sudo gluster volume heal ${VOLUME} info | awk '/^Number of entr
 		let $((heal+=entries))
 	fi
 done
-if [ "$heal" -gt 0 ]; then
-	errors=("${errors[@]}" "$heal unsynched entries")
-fi
+# if [ "$heal" -gt 0 ]; then
+#	errors=("${errors[@]}" "$heal unsynched entries")
+#fi
 
 # get volume status
 bricksfound=0
@@ -159,7 +159,7 @@ if [ -n "$errors" ]; then
 	sep='; '
 	msg=$(printf "${sep}%s" "${errors[@]}")
 	msg=${msg:${#sep}}
-	if [ ${ex_stat} == "CRITICAL_stat" ]; then
+	if [ "${ex_stat}" == "CRITICAL_stat" ]; then
 		Exit CRITICAL "${msg}"
 	else
 		Exit WARNING "${msg}"
@@ -167,4 +167,4 @@ if [ -n "$errors" ]; then
 fi
 
 # exit with no errors
-Exit OK "${bricksfound} bricks; free space ${freegb}GB"
+Exit OK "${bricksfound} bricks; free space ${freegb}GB;${heal} unsynched entries"
